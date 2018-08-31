@@ -18,8 +18,7 @@ pipelines:
           - cypress
         script:
           - npx @bahmutov/print-env BITBUCKET
-          - npm start &
-          - npm run e2e:record -- --parallel --group $BITBUCKET_BUILD_NUMBER
+          - npm run start:ci & npm run e2e:record -- --parallel --group $BITBUCKET_BUILD_NUMBER
 definitions:
   caches:
     npm: $HOME/.npm
