@@ -12,6 +12,8 @@ pipelines:
       script:
         - npm ci
   - parallel:
+    # run these jobs in parallel so they load balance all specs
+    # TODO how can we copy these settings easily?
     - step:
         name: E2E tests
         caches:
@@ -19,7 +21,16 @@ pipelines:
           - cypress
         script:
           - npx @bahmutov/print-env BITBUCKET
-          - npm start &
+          - npm run start:ci &
+          - npm run e2e:record -- --parallel --ci-build-id $BITBUCKET_BUILD_NUMBER
+    - step:
+        name: E2E tests
+        caches:
+          - node
+          - cypress
+        script:
+          - npx @bahmutov/print-env BITBUCKET
+          - npm run start:ci &
           - npm run e2e:record -- --parallel --ci-build-id $BITBUCKET_BUILD_NUMBER
 definitions:
   caches:
