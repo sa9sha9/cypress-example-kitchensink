@@ -4,14 +4,22 @@ options:
 pipelines:
   default:
   - step:
-      name: E2E tests
+      name: Install dependencies
       caches:
         - npm
         - cypress
       script:
         - npm ci
-        - npx @bahmutov/print-env BITBUCKET
-        - npm run test:ci:record
+  - parallel:
+    - step:
+        name: E2E tests
+        caches:
+          - npm
+          - cypress
+        script:
+          - npx @bahmutov/print-env BITBUCKET
+          - npm start &
+          - npm run e2e:record -- --parallel --group $BITBUCKET_BUILD_NUMBER
 definitions:
   caches:
     npm: $HOME/.npm
