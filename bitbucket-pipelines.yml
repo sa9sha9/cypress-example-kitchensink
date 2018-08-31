@@ -1,6 +1,18 @@
 image: cypress/base:10
 options:
   max-time: 10
+  
+# job definition for running E2E tests in parallel
+e2e: &e2e
+  name: E2E tests
+  caches:
+    - node
+    - cypress
+  script:
+    - npx @bahmutov/print-env BITBUCKET
+    - npm run start:ci &
+    - npm run e2e:record -- --parallel --ci-build-id $BITBUCKET_BUILD_NUMBER
+    
 pipelines:
   default:
   - step:
@@ -12,26 +24,13 @@ pipelines:
       script:
         - npm ci
   - parallel:
-    # run these jobs in parallel so they load balance all specs
-    # TODO how can we copy these settings easily?
+    # run N steps in parallel
     - step:
-        name: E2E tests
-        caches:
-          - node
-          - cypress
-        script:
-          - npx @bahmutov/print-env BITBUCKET
-          - npm run start:ci &
-          - npm run e2e:record -- --parallel --ci-build-id $BITBUCKET_BUILD_NUMBER
+        <<: *e2e    
     - step:
-        name: E2E tests
-        caches:
-          - node
-          - cypress
-        script:
-          - npx @bahmutov/print-env BITBUCKET
-          - npm run start:ci &
-          - npm run e2e:record -- --parallel --ci-build-id $BITBUCKET_BUILD_NUMBER
+        <<: *e2e
+    - step:
+        <<: *e2e
 definitions:
   caches:
     npm: $HOME/.npm
