@@ -1,22 +1,13 @@
-image: node:10.8.0
+image: cypress/base:10
 options:
-  max-time: 30
+  max-time: 10
 pipelines:
   default:
-  - step:
-      name: Install, build and tests
-      caches:
-        - npm
-      script:
-        - npm ci
-        - npm run build
-        - npm run test
   - step:
       name: E2E tests
       caches:
         - npm
         - cypress
-      image: cypress/base:10
       script:
         - npm ci
         - npm run test:ci
