@@ -10,7 +10,7 @@ pipelines:
         - cypress
       script:
         - npm ci
-        - npm run test:ci
+        - npm run test:ci:record
 definitions:
   caches:
     npm: $HOME/.npm
