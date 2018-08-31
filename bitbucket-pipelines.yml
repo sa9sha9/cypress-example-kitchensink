@@ -8,17 +8,19 @@ pipelines:
       caches:
         - npm
         - cypress
+        - node
       script:
         - npm ci
   - parallel:
     - step:
         name: E2E tests
         caches:
-          - npm
+          - node
           - cypress
         script:
           - npx @bahmutov/print-env BITBUCKET
-          - npm run start:ci & npm run e2e:record -- --parallel --group $BITBUCKET_BUILD_NUMBER
+          - npm start &
+          - npm run e2e:record -- --parallel --group $BITBUCKET_BUILD_NUMBER
 definitions:
   caches:
     npm: $HOME/.npm
