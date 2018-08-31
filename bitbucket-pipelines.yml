@@ -10,6 +10,7 @@ pipelines:
         - cypress
       script:
         - npm ci
+        - npx @bahmutov/print-env BITBUCKET
         - npm run test:ci:record
 definitions:
   caches:
