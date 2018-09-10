@@ -23,6 +23,8 @@ pipelines:
         - node
       script:
         - npm ci
+        # let's see the environment variables right away
+        - npx @bahmutov/print-env BITBUCKET
   - parallel:
     # run N steps in parallel
     - step:
